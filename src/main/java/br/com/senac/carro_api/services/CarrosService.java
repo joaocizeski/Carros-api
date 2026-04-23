@@ -12,40 +12,40 @@ public class CarrosService {
 
     private CarrosRepositorio carrosRepositorio;
 
-    public CarrosService(CarrosRepositorio clientesRepositorio) {
-        this.carrosRepositorio = clientesRepositorio;
+    public CarrosService(CarrosRepositorio carrosRepositorio) {
+        this.carrosRepositorio = carrosRepositorio;
     }
 
     public List<Carros> listar(){
         return carrosRepositorio.findAll();
     }
 
-    public Carros criar(CarrosRequestDto cliente){
-        Carros clientePersist = this.clientesRequestDtoParaClientes(cliente);
+    public Carros criar(CarrosRequestDto carro){
+        Carros carroPersist = this.carrosRequestDtoParaCarros(carro);
 
-        return carrosRepositorio.save(clientePersist);
+        return carrosRepositorio.save(carroPersist);
     }
 
-    public Carros atualizar(Long id, CarrosRequestDto clientesRequestDto){
+    public Carros atualizar(Long id, CarrosRequestDto carrosRequestDto){
         if (carrosRepositorio.existsById(id)) {
-            CarrosRequestDto cliente;
-            Carros clientesPersist = this.clientesRequestDtoParaClientes(clientesRequestDto);
+            CarrosRequestDto carros;
+            Carros carrosPersist = this.carrosRequestDtoParaCarros(carrosRequestDto);
 
-            return carrosRepositorio.save(clientesPersist);
+            return carrosRepositorio.save(carrosPersist);
         }
-        throw new RuntimeException("Cliente não encontrado");
+        throw new RuntimeException("Client não encontrado");
     }
 
     public void deletar(Long id) {
         if (carrosRepositorio.existsById(id)){
             carrosRepositorio.deleteById(id);
         }
-        throw new RuntimeException("Cliente não encontrado");
+        throw new RuntimeException("Carro não encontrado");
     }
 
 // ----------------------------------------------------------------------------------------------------------
 
-    private Carros clientesRequestDtoParaClientes(CarrosRequestDto entrada){
+    private Carros carrosRequestDtoParaCarros(CarrosRequestDto entrada){
         Carros saida = new Carros();
         saida.setModelo(entrada.getModelo());
         saida.setMarca(entrada.getMarca());

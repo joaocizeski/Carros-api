@@ -14,8 +14,8 @@ import java.util.List;
 public class CarrosController {
     private CarrosService carroServices;
 
-    public CarrosController(CarrosService clientesServices) {
-        this.carroServices = clientesServices;
+    public CarrosController(CarrosService carroServices) {
+        this.carroServices = carroServices;
     }
 
     @GetMapping("/listar")
