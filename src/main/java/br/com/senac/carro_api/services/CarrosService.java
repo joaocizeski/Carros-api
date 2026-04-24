@@ -1,5 +1,6 @@
 package br.com.senac.carro_api.services;
 
+import br.com.senac.carro_api.dtos.CarrosFiltroDto;
 import br.com.senac.carro_api.dtos.CarrosRequestDto;
 import br.com.senac.carro_api.entidades.Carros;
 import br.com.senac.carro_api.repositorios.CarrosRepositorio;
@@ -16,7 +17,12 @@ public class CarrosService {
         this.carrosRepositorio = carrosRepositorio;
     }
 
-    public List<Carros> listar(){
+    public List<Carros> listar(CarrosFiltroDto filtro){
+        if (filtro.getModelo()!=null){
+            return carrosRepositorio
+                    .findByModelo(filtro.getModelo());
+        }
+
         return carrosRepositorio.findAll();
     }
 
@@ -31,6 +37,8 @@ public class CarrosService {
             CarrosRequestDto carros;
             Carros carrosPersist = this.carrosRequestDtoParaCarros(carrosRequestDto);
 
+            carrosPersist.setId(id);
+
             return carrosRepositorio.save(carrosPersist);
         }
         throw new RuntimeException("Client não encontrado");
@@ -44,6 +52,13 @@ public class CarrosService {
     }
 
 // ----------------------------------------------------------------------------------------------------------
+
+    public Carros listarById(Long id){
+        if (carrosRepositorio.existsById(id)){
+            return carrosRepositorio.findById(id).get();
+        }
+        throw new RuntimeException("Carro não Existe");
+    }
 
     private Carros carrosRequestDtoParaCarros(CarrosRequestDto entrada){
         Carros saida = new Carros();
