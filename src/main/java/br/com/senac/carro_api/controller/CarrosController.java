@@ -5,12 +5,12 @@ import br.com.senac.carro_api.dtos.CarrosRequestDto;
 import br.com.senac.carro_api.entidades.Carros;
 import br.com.senac.carro_api.services.CarrosService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@CrossOrigin
+@RestController
 @RequestMapping("/carros")
 public class CarrosController {
     private CarrosService carroServices;
@@ -20,69 +20,64 @@ public class CarrosController {
     }
 
     @GetMapping("/listar")
-    public ResponseEntity<List<Carros>> listar(
-            CarrosFiltroDto filtro) {
+    public ResponseEntity<List<Carros>> listar(CarrosFiltroDto filtro) {
         return ResponseEntity.ok(carroServices.listar(filtro));
     }
 
     @PostMapping("/criar")
-    public ResponseEntity<Carros> criar(
-        @RequestBody CarrosRequestDto carro){
-       try{
-           return ResponseEntity.ok(carroServices.criar(carro));
-       } catch (Exception e) {
+    public ResponseEntity<Carros> criar(@RequestBody CarrosRequestDto carro) {
+        try {
+            return ResponseEntity.ok(carroServices.criar(carro));
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(null);
-       }
+        }
     }
 
     @PutMapping("/atualizar/{id}")
     public ResponseEntity<Carros> atualizar(
             @RequestBody CarrosRequestDto carro,
-            @PathVariable Long id){
+            @PathVariable Long id) {
         try {
             return ResponseEntity.ok(carroServices.atualizar(id, carro));
-        } catch (RuntimeException e){
-            return ResponseEntity.
-                    badRequest().
-                    body(null);
+        } catch (RuntimeException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(null);
         } catch (Exception e) {
-            return ResponseEntity.
-                    internalServerError().
-                    body(null);
+            return ResponseEntity
+                    .internalServerError()
+                    .body(null);
         }
     }
 
     @DeleteMapping("/deletar/{id}")
-    public ResponseEntity<Void> deletar(
-            @PathVariable Long id){
-        try{
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        try {
             carroServices.deletar(id);
             return ResponseEntity.ok(null);
-        } catch (RuntimeException e){
-            return ResponseEntity.
-                    badRequest().
-                    body(null);
-        } catch  (Exception e) {
-            return ResponseEntity.
-                    internalServerError().
-                    body(null);
+        } catch (RuntimeException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(null);
+        } catch (Exception e) {
+            return ResponseEntity
+                    .internalServerError()
+                    .body(null);
         }
     }
 
     @GetMapping("/listar/{id}")
-    public ResponseEntity<Carros> listarById(
-        @PathVariable Long id){
+    public ResponseEntity<Carros> listarById(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(carroServices.listarById(id));
-        } catch (RuntimeException e){
-            return ResponseEntity.
-                    badRequest().
-                    body(null);
+        } catch (RuntimeException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(null);
         } catch (Exception e) {
-            return ResponseEntity.
-                    internalServerError().
-                    body(null);
+            return ResponseEntity
+                    .internalServerError()
+                    .body(null);
         }
     }
-
 }

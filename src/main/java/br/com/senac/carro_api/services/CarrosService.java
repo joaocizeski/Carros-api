@@ -11,57 +11,53 @@ import java.util.List;
 @Service
 public class CarrosService {
 
-    private CarrosRepositorio carrosRepositorio;
+    private final CarrosRepositorio carrosRepositorio;
 
     public CarrosService(CarrosRepositorio carrosRepositorio) {
         this.carrosRepositorio = carrosRepositorio;
     }
 
-    public List<Carros> listar(CarrosFiltroDto filtro){
-        if (filtro.getModelo()!=null){
-            return carrosRepositorio
-                    .findByModelo(filtro.getModelo());
+    public List<Carros> listar(CarrosFiltroDto filtro) {
+        if (filtro != null && filtro.getModelo() != null && !filtro.getModelo().isBlank()) {
+            return carrosRepositorio.findByModelo(filtro.getModelo());
         }
 
         return carrosRepositorio.findAll();
     }
 
-    public Carros criar(CarrosRequestDto carro){
+    public Carros criar(CarrosRequestDto carro) {
         Carros carroPersist = this.carrosRequestDtoParaCarros(carro);
-
         return carrosRepositorio.save(carroPersist);
     }
 
-    public Carros atualizar(Long id, CarrosRequestDto carrosRequestDto){
+    public Carros atualizar(Long id, CarrosRequestDto carrosRequestDto) {
         if (carrosRepositorio.existsById(id)) {
-            CarrosRequestDto carros;
             Carros carrosPersist = this.carrosRequestDtoParaCarros(carrosRequestDto);
-
             carrosPersist.setId(id);
 
             return carrosRepositorio.save(carrosPersist);
         }
-        throw new RuntimeException("Client não encontrado");
-    }
 
-    public void deletar(Long id) {
-        if (carrosRepositorio.existsById(id)){
-            carrosRepositorio.deleteById(id);
-        }
         throw new RuntimeException("Carro não encontrado");
     }
 
-// ----------------------------------------------------------------------------------------------------------
-
-    public Carros listarById(Long id){
-        if (carrosRepositorio.existsById(id)){
-            return carrosRepositorio.findById(id).get();
+    public void deletar(Long id) {
+        if (carrosRepositorio.existsById(id)) {
+            carrosRepositorio.deleteById(id);
+            return;
         }
-        throw new RuntimeException("Carro não Existe");
+
+        throw new RuntimeException("Carro não encontrado");
     }
 
-    private Carros carrosRequestDtoParaCarros(CarrosRequestDto entrada){
+    public Carros listarById(Long id) {
+        return carrosRepositorio.findById(id)
+                .orElseThrow(() -> new RuntimeException("Carro não encontrado"));
+    }
+
+    private Carros carrosRequestDtoParaCarros(CarrosRequestDto entrada) {
         Carros saida = new Carros();
+
         saida.setModelo(entrada.getModelo());
         saida.setMarca(entrada.getMarca());
         saida.setAno(entrada.getAno());
@@ -69,6 +65,4 @@ public class CarrosService {
 
         return saida;
     }
-
-
 }
